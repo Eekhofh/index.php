@@ -130,6 +130,6 @@ function connect_db($host, $database, $username, $password){
         $pdo = new PDO($dsn, $username, $password, $options);
         return $pdo;
     } catch (PDOException $error) {
-    echo 'Connection to database failed';
+        echo 'Connection to database failed';
     }
 }
