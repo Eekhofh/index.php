@@ -119,17 +119,17 @@ function get_error($feedback){
         </div>';
 }
 
-function create_user{
-    $user = array('ddwt21'=>'ddwt21');
-    return $user
-}
-
 function connect_db($host, $database, $username, $password){
-    $dsn = "mysql:host=$host;db=$database;charset='utf8mb4'";
+    $charset = 'utf8mb4';
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ];
+    $dsn = "mysql:host=$host;dbname=$database;charset=$charset";
     try {
         $pdo = new PDO($dsn, $username, $password, $options);
+        return $pdo;
     } catch (PDOException $error) {
-        echo $sprintf("Connection failed.", $error->getMessage());
+    echo 'Connection to database failed';
     }
-    return $pdo
 }

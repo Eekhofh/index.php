@@ -275,3 +275,5 @@ else {
     http_response_code(404);
     echo '404 Not Found';
 }
+
+$db = connect_db('localhost:8889', 'ddwt21_week1', 'ddwt21', 'ddwt21');
