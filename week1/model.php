@@ -118,3 +118,18 @@ function get_error($feedback){
             '.$feedback['message'].'
         </div>';
 }
+
+function create_user{
+    $user = array('ddwt21'=>'ddwt21');
+    return $user
+}
+
+function connect_db($host, $database, $username, $password){
+    $dsn = "mysql:host=$host;db=$database;charset='utf8mb4'";
+    try {
+        $pdo = new PDO($dsn, $username, $password, $options);
+    } catch (PDOException $error) {
+        echo $sprintf("Connection failed.", $error->getMessage());
+    }
+    return $pdo
+}
