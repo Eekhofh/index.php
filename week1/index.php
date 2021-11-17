@@ -277,3 +277,5 @@ else {
 }
 
 $db = connect_db('localhost:8889', 'ddwt21_week1', 'ddwt21', 'ddwt21');
+
+$rows = count_series($db);

@@ -133,3 +133,9 @@ function connect_db($host, $database, $username, $password){
         echo 'Connection to database failed';
     }
 }
+
+function count_series($pdo){
+    $rows = $pdo->prepare('SELECT id FROM series');
+    $rows->execute();
+    return $rows->rowCount($rows);
+}
