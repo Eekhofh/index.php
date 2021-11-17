@@ -119,7 +119,7 @@ function get_error($feedback){
         </div>';
 }
 
-function create_user{
+function create_user(){
     $user = array('ddwt21'=>'ddwt21');
     return $user
 }
