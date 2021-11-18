@@ -139,3 +139,45 @@ function count_series($pdo){
     $rows->execute();
     return $rows->rowCount($rows);
 }
+
+function get_series($pdo){
+    $series = $pdo->prepare('SELECT * FROM series');
+    $series->execute();
+    $series_info = $series->fetchAll();
+    $series_list = Array();
+    foreach($series_info as $info){
+        $series_list[htmlspecialchars($info['id'])] = array_map('htmlspecialchars', Array(
+            'name' => $info['name'],
+            'creator' => $info['creator'],
+            'seasons' => $info['seasons'],
+            'abstract' => $info['abstract']
+        ));
+    }
+    return $series_list;
+}
+
+function get_series_table($series_list){
+    $table = '';
+    $table .= '<table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Series</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>';
+    foreach($series_list as $key=>$value){
+        $name = $value['name'];
+        $table .= '<tr>
+                        <th scope="row">';
+        $table .= $name;
+        $table .= '</th>
+                    <td><a href="DDWT21/week1/series/?series_id=';
+        $table .= $key;
+        $table .= '" role="button" class="btn btn-primary">More info</a></td></tr>';
+    }
+    $table .= '</tbody>
+               </table>';
+    return $table;
+}
+

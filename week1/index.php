@@ -13,6 +13,9 @@ $db = connect_db('localhost:8889', 'ddwt21_week1', 'ddwt21', 'ddwt21');
 
 $rows = count_series($db);
 
+$series_list = get_series($db);
+print_r($series_list);
+
 /* Landing page */
 if (new_route('/DDWT21/week1/', 'get')) {
     /* Page info */
@@ -56,27 +59,8 @@ elseif (new_route('/DDWT21/week1/overview/', 'get')) {
     $right_column = use_template('cards');
     $page_subtitle = 'The overview of all series';
     $page_content = 'Here you find all series listed on Series Overview.';
-    $left_content = '
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">Series</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row">House of Cards</th>
-            <td><a href="/DDWT21/week1/series/" role="button" class="btn btn-primary">More info</a></td>
-        </tr>
+    $left_content = get_series_table($series_list);
 
-        <tr>
-            <th scope="row">Game of Thrones</th>
-            <td><a href="/DDWT21/week1/series/" role="button" class="btn btn-primary">More info</a></td>
-        </tr>
-
-        </tbody>
-    </table>';
 
     /* Choose Template */
     include use_template('main');
@@ -249,27 +233,7 @@ elseif (new_route('/DDWT21/week1/remove/', 'post')) {
     $right_column = use_template('cards');
     $page_subtitle = 'The overview of all series';
     $page_content = 'Here you find all series listed on Series Overview.';
-    $left_content = '
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">Series</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row">House of Cards</th>
-            <td><a href="/DDWT21/week1/series/" role="button" class="btn btn-primary">More info</a></td>
-        </tr>
-
-        <tr>
-            <th scope="row">Game of Thrones</th>
-            <td><a href="/DDWT21/week1/series/" role="button" class="btn btn-primary">More info</a></td>
-        </tr>
-
-        </tbody>
-    </table>';
+    $left_content = get_series_table($series_list);
 
     /* Choose Template */
     include use_template('main');
