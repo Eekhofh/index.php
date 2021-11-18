@@ -9,6 +9,10 @@
 
 include 'model.php';
 
+$db = connect_db('localhost:8889', 'ddwt21_week1', 'ddwt21', 'ddwt21');
+
+$rows = count_series($db);
+
 /* Landing page */
 if (new_route('/DDWT21/week1/', 'get')) {
     /* Page info */
@@ -275,7 +279,3 @@ else {
     http_response_code(404);
     echo '404 Not Found';
 }
-
-$db = connect_db('localhost:8889', 'ddwt21_week1', 'ddwt21', 'ddwt21');
-
-$rows = count_series($db);
