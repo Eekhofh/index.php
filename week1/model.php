@@ -172,12 +172,19 @@ function get_series_table($series_list){
                         <th scope="row">';
         $table .= $name;
         $table .= '</th>
-                    <td><a href="DDWT21/week1/series/?series_id=';
+                    <td><a href="../series/?series_id=';
         $table .= $key;
         $table .= '" role="button" class="btn btn-primary">More info</a></td></tr>';
     }
     $table .= '</tbody>
                </table>';
     return $table;
+}
+
+function get_series_info($pdo, $id){
+    $series = $pdo->prepare('SELECT * FROM series WHERE id = ?');
+    $series->execute([$id]);
+    $type = $series->fetch();
+    return $type;
 }
 

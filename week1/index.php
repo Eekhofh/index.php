@@ -14,7 +14,6 @@ $db = connect_db('localhost:8889', 'ddwt21_week1', 'ddwt21', 'ddwt21');
 $rows = count_series($db);
 
 $series_list = get_series($db);
-print_r($series_list);
 
 /* Landing page */
 if (new_route('/DDWT21/week1/', 'get')) {
@@ -69,10 +68,12 @@ elseif (new_route('/DDWT21/week1/overview/', 'get')) {
 /* Single series */
 elseif (new_route('/DDWT21/week1/series/', 'get')) {
     /* Get series from db */
-    $series_name = 'House of Cards';
-    $series_abstract = 'A Congressman works with his equally conniving wife to exact revenge on the people who betrayed him.';
-    $nbr_seasons = '6';
-    $creators = 'Beau Willimon';
+    $id = $_GET['series_id'];
+    $series_info = get_series_info($db, $id);
+    $series_name = $series_info['name'];
+    $series_abstract = $series_info['abstract'];
+    $nbr_seasons = $series_info['seasons'];
+    $creators = $series_info['creator'];
 
     /* Page info */
     $page_title = $series_name;
