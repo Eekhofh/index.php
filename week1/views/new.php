@@ -54,7 +54,7 @@
                             </div>
                             <?php if(isset($series_id)){?>
                             <div>
-                                <input type="hidden" id="<?= $series_id ?>" name="<?= $series_id ?>" value="<?= $series_info['id'] ?>">
+                                <input type="hidden" id="series_id" name="series_id" value="<?= $series_info['id'] ?>">
                             </div>
                             <?php } ?>
                             <div class="form-group row">
