@@ -155,6 +155,8 @@ elseif (new_route('/DDWT21/week1/add/', 'post')) {
     $submit_btn = 'Add Series';
     $form_action = '/DDWT21/week1/add/';
 
+    $rows = count_series($db);
+
     include use_template('new');
 }
 
@@ -264,7 +266,9 @@ elseif (new_route('/DDWT21/week1/remove/', 'post')) {
     $right_column = use_template('cards');
     $page_subtitle = 'The overview of all series';
     $page_content = 'Here you find all series listed on Series Overview.';
+    $series_list = get_series($db);
     $left_content = get_series_table($series_list);
+    $rows = count_series($db);
 
     /* Choose Template */
     include use_template('main');
