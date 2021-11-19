@@ -127,6 +127,14 @@ elseif (new_route('/DDWT21/week1/add/', 'get')) {
 
 /* Add series POST */
 elseif (new_route('/DDWT21/week1/add/', 'post')) {
+    $name = $_POST['Name'];
+    $creator = $_POST['Creator'];
+    $seasons = $_POST['Seasons'];
+    $abstract = $_POST['Abstract'];
+
+    $message = add_series($db, $name, $creator, $seasons, $abstract);
+    echo get_error($message);
+
     /* Page info */
     $page_title = 'Add Series';
     $breadcrumbs = get_breadcrumbs([
@@ -148,14 +156,6 @@ elseif (new_route('/DDWT21/week1/add/', 'post')) {
     $form_action = '/DDWT21/week1/add/';
 
     include use_template('new');
-
-    $name = $_POST['Name'];
-    $creator = $_POST['Creator'];
-    $seasons = $_POST['Seasons'];
-    $abstract = $_POST['Abstract'];
-
-    $message = add_series($db, $name, $creator, $seasons, $abstract);
-    echo get_error($message);
 }
 
 /* Edit series GET */
@@ -198,19 +198,32 @@ elseif (new_route('/DDWT21/week1/edit/', 'post')) {
     /* Get series info from db */
     $series_id = $_POST['series_id'];
     $series_info = get_series_info($db, $series_id);
+    $series_name = $series_info['name'];
 
+    $newname = $_POST['Name'];
+    $creators = $_POST['Creator'];
+    $nbr_seasons = $_POST['Seasons'];
+    $abstract = $_POST['Abstract'];
+
+    $message = update_series($db, $series_name, $newname, $creators, $nbr_seasons, $abstract, $series_id);
+    echo get_error($message);
+    /**
     $series_name = $series_info['name'];
     $series_abstract = $series_info['abstract'];
     $nbr_seasons = $series_info['seasons'];
     $creators = $series_info['creator'];
-
+    **/
     /* Page info */
-    $page_title = $series_name;
+    if($message['type'] == 'success') {
+        $page_title = $newname;
+    } else {
+        $page_title = $series_name;
+    }
     $breadcrumbs = get_breadcrumbs([
         'DDWT21' => na('/DDWT21/', False),
         'Week 1' => na('/DDWT21/week1/', False),
         'Overview' => na('/DDWT21/week1/overview/', False),
-        $series_name => na('/DDWT21/week1/series/', True)
+        $page_title => na('/DDWT21/week1/series/', True)
     ]);
     $navigation = get_navigation([
         'Home' => na('/DDWT21/week1/', False),
@@ -225,14 +238,6 @@ elseif (new_route('/DDWT21/week1/edit/', 'post')) {
 
     /* Choose Template */
     include use_template('series');
-
-    $newname = $_POST['Name'];
-    $creator = $_POST['Creator'];
-    $seasons = $_POST['Seasons'];
-    $abstract = $_POST['Abstract'];
-
-    $message = update_series($db, $series_name, $newname, $creator, $seasons, $abstract, $series_id);
-    echo get_error($message);
 }
 
 /* Remove series */
