@@ -270,3 +270,19 @@ function update_series($pdo, $oldname, $newname, $creator, $seasons, $abstract, 
     }
 }
 
+function remove_series($pdo, $id){
+    $series = $pdo->prepare('DELETE FROM series  WHERE id = ?');
+    $series->execute([$id]);
+    $deleted_series = $series->rowCount();
+    if($deleted_series == 1){
+        return [
+            'type' => 'success',
+            'message' => 'Successfully deleted series'
+        ];
+    } else {
+        return [
+            'type' => 'warning',
+            'message' => 'Something went wrong'
+        ];
+    }
+}
