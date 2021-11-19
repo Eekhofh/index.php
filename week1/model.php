@@ -172,7 +172,7 @@ function get_series_table($series_list){
                         <th scope="row">';
         $table .= $name;
         $table .= '</th>
-                    <td><a href="../series/?series_id=';
+                    <td><a href="/DDWT21/week1/series/?series_id=';
         $table .= $key;
         $table .= '" role="button" class="btn btn-primary">More info</a></td></tr>';
     }
@@ -186,5 +186,54 @@ function get_series_info($pdo, $id){
     $series->execute([$id]);
     $type = $series->fetch();
     return $type;
+}
+
+function add_series($pdo, $name, $creator, $seasons, $abstract){
+    $series = $pdo->prepare('SELECT * FROM series WHERE name = ?');
+    $series->execute([$name]);
+    $series_exist = $series->fetch();
+    if ($series_exist){
+        return [
+            'type' => 'danger',
+            'message' => 'This series already exists'
+        ];
+    } else {
+        if (
+            empty($name) or
+            empty($creator) or
+            empty($seasons) or
+            empty($abstract)
+        ) {
+            return [
+                'type' => 'danger',
+                'message' => 'Please fill in all the fields'
+            ];
+        } elseif (!is_numeric($seasons)){
+            return [
+                'type' => 'danger',
+                'message' => 'Please fill in a number in the Seasons field'
+            ];
+        } else {
+            $added_series = $pdo->prepare('INSERT INTO series (name, creator, seasons, abstract) VALUES (?, ?, ?, ?)');
+            $added_series->execute([
+                $name,
+                $creator,
+                $seasons,
+                $abstract,
+            ]);
+            $updated_db = $added_series->rowCount();
+            if ($updated_db == 1) {
+                return [
+                    'type' => 'success',
+                    'message' => 'Success!'
+                ];
+            } else {
+                return [
+                    'type' => 'warning',
+                    'message' => 'Adding book not successful'
+                ];
+            }
+        }
+    }
 }
 

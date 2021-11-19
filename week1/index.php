@@ -122,6 +122,7 @@ elseif (new_route('/DDWT21/week1/add/', 'get')) {
 
     /* Choose Template */
     include use_template('new');
+
 }
 
 /* Add series POST */
@@ -147,6 +148,14 @@ elseif (new_route('/DDWT21/week1/add/', 'post')) {
     $form_action = '/DDWT21/week1/add/';
 
     include use_template('new');
+
+    $name = $_POST['Name'];
+    $creator = $_POST['Creator'];
+    $seasons = $_POST['Seasons'];
+    $abstract = $_POST['Abstract'];
+
+    $message = add_series($db, $name, $creator, $seasons, $abstract);
+    echo get_error($message);
 }
 
 /* Edit series GET */
