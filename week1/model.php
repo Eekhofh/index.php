@@ -237,3 +237,38 @@ function add_series($pdo, $name, $creator, $seasons, $abstract){
     }
 }
 
+function update_series($pdo, $oldname, $newname, $creator, $seasons, $abstract, $id){
+    if ($oldname != $newname){
+        $series = $pdo->prepare('SELECT * FROM series WHERE name = ?');
+        $series->execute([$newname]);
+        $series_exist = $series->fetch();
+        if ($series_exist) {
+            return [
+                'type' => 'danger',
+                'message' => 'This series already exists'
+            ];
+        }
+    } else {
+        $updated_series = $pdo->prepare('UPDATE series SET name = ?, creator = ?, seasons = ?, abstract = ? WHERE id = ?');
+        $updated_series->execute([
+            $newname,
+            $creator,
+            $seasons,
+            $abstract,
+            $id
+        ]);
+        $updated_db = $updated_series->rowCount();
+        if ($updated_db == 1) {
+            return [
+                'type' => 'success',
+                'message' => 'Success!'
+            ];
+        } else {
+            return [
+                'type' => 'warning',
+                'message' => 'Adding book not successful'
+            ];
+        }
+    }
+}
+
