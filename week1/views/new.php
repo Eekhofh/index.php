@@ -34,6 +34,31 @@
                     <h5><?= $page_subtitle ?></h5>
                     <p><?= $page_content ?></p>
                     <!-- Put your form here -->
+                    <form action=<?= $form_action ?> method="POST">
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-2 col-form label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputName" name="Name" required>
+                            </div>
+                            <label for="inputCreator" class="col-sm-2 col-form label">Creator</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputCreator" name="Creator" required>
+                            </div>
+                            <label for="inputSeasons" class="col-sm-2 col-form label">Seasons</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="inputSeasons" name="Seasons" required>
+                            </div>
+                            <label for="inputName" class="col-sm-2 col-form label">Abstract</label>
+                            <div class="col-sm-10">
+                                <input type="textarea" class="form-control" id="inputAbstract" name="Abstract" required>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <button type="submit" class="btn btn-primary" name="Submit"><?= $submit_btn ?></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
                 <!-- Right column -->
