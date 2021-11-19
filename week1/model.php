@@ -256,7 +256,7 @@ function update_series($pdo, $oldname, $newname, $creator, $seasons, $abstract, 
             $id
         ]);
         $updated_db = $updated_series->rowCount();
-        if ($updated_db == 1) {
+        if ($updated_db == 1 or $newname == $oldname) {
             return [
                 'type' => 'success',
                 'message' => 'Success!'
@@ -264,7 +264,7 @@ function update_series($pdo, $oldname, $newname, $creator, $seasons, $abstract, 
         } else {
             return [
                 'type' => 'warning',
-                'message' => 'Adding book not successful'
+                'message' => 'Editing series not succesful'
             ];
         }
     }
