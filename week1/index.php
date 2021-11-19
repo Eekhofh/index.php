@@ -163,6 +163,7 @@ elseif (new_route('/DDWT21/week1/edit/', 'get')) {
     /* Get series info from db */
     $series_id = $_GET['series_id'];
     $series_info = get_series_info($db, $series_id);
+
     $series_name = $series_info['name'];
     $series_abstract = $series_info['abstract'];
     $nbr_seasons = $series_info['seasons'];
@@ -195,13 +196,16 @@ elseif (new_route('/DDWT21/week1/edit/', 'get')) {
 /* Edit series POST */
 elseif (new_route('/DDWT21/week1/edit/', 'post')) {
     /* Get series info from db */
-    $series_name = 'House of Cards';
-    $series_abstract = 'A Congressman works with his equally conniving wife to exact revenge on the people who betrayed him.';
-    $nbr_seasons = '6';
-    $creators = 'Beau Willimon';
+    $series_id = $_POST['series_id'];
+    $series_info = get_series_info($db, $series_id);
+
+    $series_name = $series_info['name'];
+    $series_abstract = $series_info['abstract'];
+    $nbr_seasons = $series_info['seasons'];
+    $creators = $series_info['creator'];
 
     /* Page info */
-    $page_title = $series_info['name'];
+    $page_title = $series_name;
     $breadcrumbs = get_breadcrumbs([
         'DDWT21' => na('/DDWT21/', False),
         'Week 1' => na('/DDWT21/week1/', False),
@@ -221,6 +225,14 @@ elseif (new_route('/DDWT21/week1/edit/', 'post')) {
 
     /* Choose Template */
     include use_template('series');
+
+    $newname = $_POST['Name'];
+    $creator = $_POST['Creator'];
+    $seasons = $_POST['Seasons'];
+    $abstract = $_POST['Abstract'];
+
+    $message = update_series($db, $series_name, $newname, $creator, $seasons, $abstract, $series_id);
+    echo get_error($message);
 }
 
 /* Remove series */
