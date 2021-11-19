@@ -238,16 +238,14 @@ function add_series($pdo, $name, $creator, $seasons, $abstract){
 }
 
 function update_series($pdo, $oldname, $newname, $creator, $seasons, $abstract, $id){
-    if ($oldname != $newname){
-        $series = $pdo->prepare('SELECT * FROM series WHERE name = ?');
-        $series->execute([$newname]);
-        $series_exist = $series->fetch();
-        if ($series_exist) {
-            return [
-                'type' => 'danger',
-                'message' => 'This series already exists'
-            ];
-        }
+    $series = $pdo->prepare('SELECT * FROM series WHERE name = ?');
+    $series->execute([$newname]);
+    $series_exist = $series->fetch();
+    if ($series_exist && $oldname != $newname) {
+        return [
+            'type' => 'danger',
+            'message' => 'This series already exists'
+        ];
     } else {
         $updated_series = $pdo->prepare('UPDATE series SET name = ?, creator = ?, seasons = ?, abstract = ? WHERE id = ?');
         $updated_series->execute([
