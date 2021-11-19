@@ -133,7 +133,7 @@ elseif (new_route('/DDWT21/week1/add/', 'post')) {
     $abstract = $_POST['Abstract'];
 
     $message = add_series($db, $name, $creator, $seasons, $abstract);
-    echo get_error($message);
+    $error_msg = get_error($message);
 
     /* Page info */
     $page_title = 'Add Series';
@@ -208,7 +208,7 @@ elseif (new_route('/DDWT21/week1/edit/', 'post')) {
     $abstract = $_POST['Abstract'];
 
     $message = update_series($db, $series_name, $newname, $creators, $nbr_seasons, $abstract, $series_id);
-    echo get_error($message);
+    $error_msg = get_error($message);
     /**
     $series_name = $series_info['name'];
     $series_abstract = $series_info['abstract'];
@@ -236,7 +236,7 @@ elseif (new_route('/DDWT21/week1/edit/', 'post')) {
     /* Page content */
     $right_column = use_template('cards');
     $page_subtitle = sprintf('Information about %s', $series_name);
-    $page_content = $series_info['abstract'];
+    $page_content = $abstract;
 
     /* Choose Template */
     include use_template('series');
