@@ -50,7 +50,7 @@
                             </div>
                             <label for="inputName" class="col-sm-2 col-form label">Abstract</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" id="inputAbstract" name="Abstract" value="<?php if (isset($series_info)) {echo $series_info['abstract'];} ?>" required></textarea>
+                                <textarea class="form-control" id="inputAbstract" name="Abstract" required><?php if (isset($series_info)) {echo $series_info['abstract'];} ?></textarea>
                             </div>
                             <?php if(isset($series_id)){?>
                             <div>
