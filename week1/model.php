@@ -225,12 +225,12 @@ function add_series($pdo, $name, $creator, $seasons, $abstract){
             if ($updated_db == 1) {
                 return [
                     'type' => 'success',
-                    'message' => 'Success!'
+                    'message' => 'Series was successfully added!'
                 ];
             } else {
                 return [
                     'type' => 'warning',
-                    'message' => 'Adding book not successful'
+                    'message' => 'Adding series not successful'
                 ];
             }
         }
@@ -264,7 +264,7 @@ function update_series($pdo, $oldname, $newname, $creator, $seasons, $abstract, 
         } else {
             return [
                 'type' => 'warning',
-                'message' => 'Editing series not succesful'
+                'message' => 'Editing series not successful'
             ];
         }
     }
