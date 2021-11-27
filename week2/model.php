@@ -132,13 +132,14 @@ function get_navigation($navigation){
  * @param array $series Associative array of series
  * @return string
  */
-function get_series_table($series){
+function get_series_table($series, $pdo){
     $table_exp = '
     <table class="table table-hover">
     <thead
     <tr>
         <th scope="col">Series</th>
         <th scope="col"></th>
+        <th scope="col">Name</th>
     </tr>
     </thead>
     <tbody>';
@@ -146,6 +147,7 @@ function get_series_table($series){
         $table_exp .= '
         <tr>
             <th scope="row">'.$value['name'].'</th>
+            <th scope="row">'.get_user_name($pdo, $value['user']).'</th>
             <td><a href="/DDWT21/week2/series/?series_id='.$value['id'].'" role="button" class="btn btn-primary">More info</a></td>
         </tr>
         ';
@@ -411,4 +413,11 @@ function get_user_id(){
     } else {
         return False;
     }
+}
+
+function get_user_name($pdo, $id){
+    $name = $pdo->prepare('SELECT firstname, lastname FROM users WHERE id = ?');
+    $name->execute([$id]);
+    $username = $name->fetch();
+    return $username['firstname'];
 }
