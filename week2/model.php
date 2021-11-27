@@ -421,3 +421,9 @@ function get_user_name($pdo, $id){
     $username = $name->fetch();
     return $username['firstname'];
 }
+
+function count_users($pdo){
+    $rows = $pdo->prepare('SELECT id FROM series');
+    $rows->execute();
+    return $rows->rowCount($rows);
+}

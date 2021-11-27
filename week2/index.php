@@ -12,6 +12,7 @@ include 'model.php';
 /* Connect to DB */
 $db = connect_db('localhost:8889', 'ddwt21_week2', 'ddwt21','ddwt21');
 $nbr_series = count_series($db);
+$nbr_users = count_users($db);
 $right_column = use_template('cards');
 
 /* Landing page */
@@ -76,6 +77,7 @@ elseif (new_route('/DDWT21/week2/series/', 'get')) {
     /* Get series from db */
     $series_id = $_GET['series_id'];
     $series_info = get_series_info($db, $series_id);
+    $added_by = get_user_name($db, $series_id);
 
     /* Page info */
     $page_title = $series_info['name'];
