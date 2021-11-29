@@ -107,6 +107,11 @@ elseif (new_route('/DDWT21/week2/series/', 'get')) {
 
 /* Add series GET */
 elseif (new_route('/DDWT21/week2/add/', 'get')) {
+    /* Check login */
+    if (!check_login()) {
+        redirect('/DDWT21/week2/login/');
+    }
+
     /* Get Number of Series */
     $nbr_series = count_series($db);
 
@@ -137,6 +142,11 @@ elseif (new_route('/DDWT21/week2/add/', 'get')) {
 
 /* Add series POST */
 elseif (new_route('/DDWT21/week2/add/', 'post')) {
+    /* Check login */
+    if (!check_login()) {
+        redirect('/DDWT21/week2/login/');
+    }
+
     /* Get Number of Series */
     $nbr_series = count_series($db);
 
@@ -170,6 +180,11 @@ elseif (new_route('/DDWT21/week2/add/', 'post')) {
 
 /* Edit series GET */
 elseif (new_route('/DDWT21/week2/edit/', 'get')) {
+    /* Check login */
+    if (!check_login()) {
+        redirect('/DDWT21/week2/login/');
+    }
+
     /* Get Number of Series */
     $nbr_series = count_series($db);
 
@@ -204,6 +219,11 @@ elseif (new_route('/DDWT21/week2/edit/', 'get')) {
 
 /* Edit series POST */
 elseif (new_route('/DDWT21/week2/edit/', 'post')) {
+    /* Check login */
+    if (!check_login()) {
+        redirect('/DDWT21/week2/login/');
+    }
+
     /* Get Number of Series */
     $nbr_series = count_series($db);
 
@@ -243,6 +263,11 @@ elseif (new_route('/DDWT21/week2/edit/', 'post')) {
 
 /* Remove series */
 elseif (new_route('/DDWT21/week2/remove/', 'post')) {
+    /* Check login */
+    if (!check_login()) {
+        redirect('/DDWT21/week2/login/');
+    }
+
     /* Get Number of Series */
     $nbr_series = count_series($db);
 
@@ -277,8 +302,13 @@ elseif (new_route('/DDWT21/week2/remove/', 'post')) {
 
 /* my account */
 elseif (new_route('/DDWT21/week2/myaccount/', 'get')) {
+    /* Check login */
+    if (!check_login()) {
+        redirect('/DDWT21/week2/login/');
+    }
+
     /* get user info */
-    $user = get_user_name($db, 1);
+    $user = get_user_name($db, $_SESSION['user_id']);
 
     /* Page info */
     $page_title = 'My Account';
@@ -296,7 +326,7 @@ elseif (new_route('/DDWT21/week2/myaccount/', 'get')) {
     ]);
 
     /* Page content */
-    $page_subtitle = 'My Account';
+    $page_subtitle = 'Account';
     $page_content = 'Here you find information regarding your account.';
 
     /* Choose Template */
@@ -305,8 +335,6 @@ elseif (new_route('/DDWT21/week2/myaccount/', 'get')) {
 
 /* register GET */
 elseif (new_route('/DDWT21/week2/register/', 'get')) {
-
-
     /* Page info */
     $page_title = 'Registration';
     $breadcrumbs = get_breadcrumbs([
@@ -369,6 +397,11 @@ elseif (new_route('/DDWT21/week2/register/', 'post')) {
 
 /* login GET */
 elseif (new_route('/DDWT21/week2/login/', 'get')) {
+    /* Check login */
+    if (check_login()) {
+        redirect('/DDWT21/week2/myaccount/');
+    }
+
     /* Page info */
     $page_title = 'Log in';
     $breadcrumbs = get_breadcrumbs([
@@ -396,12 +429,11 @@ elseif (new_route('/DDWT21/week2/login/', 'post')) {
     /* get user info */
     $feedback = login_user($db, $_POST);
 
-    if ($feedback['type'] == 'danger') {
-        redirect(sprintf('/DDWT21/week2/login/?error_msg=%s',
-            get_error($feedback)));
+    if ($feedback['type'] == 'success') {
+        redirect('/DDWT21/week2/myaccount/');
     } else {
-        redirect(sprintf('/DDWT21/week2/myaccount/?error_msg=%s',
-            get_error($feedback)));
+        redirect(sprintf('/DDWT21/week2/login/?error_msg=%s',
+            json_encode($feedback)));
     }
 
     /* Page info */
@@ -428,31 +460,10 @@ elseif (new_route('/DDWT21/week2/login/', 'post')) {
 
 /* logout POST */
 elseif (new_route('/DDWT21/week2/logout/', 'get')) {
-    /* get user info */
-    $user = get_user_name($db, 1);
-
-    /* Page info */
-    $page_title = 'Log in';
-    $breadcrumbs = get_breadcrumbs([
-        'DDWT21' => na('/DDWT21/', False),
-        'Week 2' => na('/DDWT21/week2/', False),
-        'Overview' => na('/DDWT21/week2/overview', False)
-    ]);
-    $navigation = get_navigation([
-        'Home' => na('/DDWT21/week2/', False),
-        'Overview' => na('/DDWT21/week2/overview', False),
-        'Add series' => na('/DDWT21/week2/add/', False),
-        'My Account' => na('/DDWT21/week2/myaccount/', False),
-        'Registration' => na('/DDWT21/week2/register/', False)
-    ]);
-
-    /* Page content */
-    $page_subtitle = 'Log in here';
-
-    /* Choose Template */
-    include use_template('login');
+    $feedback = logout_user();
+    $error_msg = get_error($feedback);
+    redirect('/DDWT21/week2/myaccount/');
 }
-
 
 else {
     http_response_code(404);

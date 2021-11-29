@@ -419,7 +419,7 @@ function get_user_name($pdo, $id){
     $name = $pdo->prepare('SELECT firstname, lastname FROM users WHERE id = ?');
     $name->execute([$id]);
     $username = $name->fetch();
-    /*return $username['firstname'];*/
+    return $username;
 }
 
 function count_users($pdo){
@@ -494,7 +494,7 @@ function login_user($pdo, $form_data){
         ];
     } else {
         try {
-            $stmt = $pdo->prepare('SELECT * FROM  users WHERE username = ?');
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ?');
             $stmt->execute([$form_data['username']]);
             $user_info = $stmt->fetch();
         } catch (PDOException $e) {
@@ -524,4 +524,23 @@ function login_user($pdo, $form_data){
             }
         }
     }
+}
+
+function check_login(){
+    session_start();
+    if (isset($_SESSION['user_id'])) {
+        return True;
+    } else {
+        return False;
+    }
+}
+
+function logout_user(){
+    session_start();
+    unset($_SESSION);
+    session_destroy();
+    return [
+        'type' => 'success',
+        'message' => 'Successfully logged out'
+    ];
 }
