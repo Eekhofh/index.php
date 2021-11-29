@@ -77,7 +77,7 @@ elseif (new_route('/DDWT21/week2/series/', 'get')) {
     /* Get series from db */
     $series_id = $_GET['series_id'];
     $series_info = get_series_info($db, $series_id);
-    $added_by = get_user_name($db, $series_id);
+    $added_by = get_user_name($db, $series_info['user']);
 
     /* Page info */
     $page_title = $series_info['name'];
@@ -274,6 +274,185 @@ elseif (new_route('/DDWT21/week2/remove/', 'post')) {
     /* Choose Template */
     include use_template('main');
 }
+
+/* my account */
+elseif (new_route('/DDWT21/week2/myaccount/', 'get')) {
+    /* get user info */
+    $user = get_user_name($db, 1);
+
+    /* Page info */
+    $page_title = 'My Account';
+    $breadcrumbs = get_breadcrumbs([
+        'DDWT21' => na('/DDWT21/', False),
+        'Week 2' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False)
+    ]);
+    $navigation = get_navigation([
+        'Home' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False),
+        'Add series' => na('/DDWT21/week2/add/', False),
+        'My Account' => na('/DDWT21/week2/myaccount/', False),
+        'Registration' => na('/DDWT21/week2/register/', False)
+    ]);
+
+    /* Page content */
+    $page_subtitle = 'My Account';
+    $page_content = 'Here you find information regarding your account.';
+
+    /* Choose Template */
+    include use_template('account');
+}
+
+/* register GET */
+elseif (new_route('/DDWT21/week2/register/', 'get')) {
+
+
+    /* Page info */
+    $page_title = 'Registration';
+    $breadcrumbs = get_breadcrumbs([
+        'DDWT21' => na('/DDWT21/', False),
+        'Week 2' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False)
+    ]);
+    $navigation = get_navigation([
+        'Home' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False),
+        'Add series' => na('/DDWT21/week2/add/', False),
+        'My Account' => na('/DDWT21/week2/myaccount/', False),
+        'Registration' => na('/DDWT21/week2/register/', False)
+    ]);
+
+    /* Page content */
+    $page_subtitle = 'Here you can register an account';
+
+    /* Choose Template */
+    include use_template('register');
+}
+
+/* register POST */
+elseif (new_route('/DDWT21/week2/register/', 'post')) {
+    /* Register user */
+    $feedback = register_user($db, $_POST);
+    $error_msg = get_error($feedback);
+
+    /*
+    if ($feedback['type'] == 'danger') {
+        redirect(sprintf('/DDWT21/week2/register/?error_msg=%s',
+            json_encode($feedback)));
+    } else {
+        redirect(sprintf('/DDWT21/week2/myaccount/?error_msg=%s',
+            json_encode($feedback)));
+    }
+    */
+
+    /* Page info */
+    $page_title = 'Registration';
+    $breadcrumbs = get_breadcrumbs([
+        'DDWT21' => na('/DDWT21/', False),
+        'Week 2' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False)
+    ]);
+    $navigation = get_navigation([
+        'Home' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False),
+        'Add series' => na('/DDWT21/week2/add/', False),
+        'My Account' => na('/DDWT21/week2/myaccount/', False),
+        'Registration' => na('/DDWT21/week2/register/', False)
+    ]);
+
+    /* Page content */
+    $page_subtitle = 'Here you can register an account';
+
+    /* Choose Template */
+    include use_template('register');
+}
+
+/* login GET */
+elseif (new_route('/DDWT21/week2/login/', 'get')) {
+    /* Page info */
+    $page_title = 'Log in';
+    $breadcrumbs = get_breadcrumbs([
+        'DDWT21' => na('/DDWT21/', False),
+        'Week 2' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False)
+    ]);
+    $navigation = get_navigation([
+        'Home' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False),
+        'Add series' => na('/DDWT21/week2/add/', False),
+        'My Account' => na('/DDWT21/week2/myaccount/', False),
+        'Registration' => na('/DDWT21/week2/register/', False)
+    ]);
+
+    /* Page content */
+    $page_subtitle = 'Log in here';
+
+    /* Choose Template */
+    include use_template('login');
+}
+
+/* login POST */
+elseif (new_route('/DDWT21/week2/login/', 'post')) {
+    /* get user info */
+    $feedback = login_user($db, $_POST);
+
+    if ($feedback['type'] == 'danger') {
+        redirect(sprintf('/DDWT21/week2/login/?error_msg=%s',
+            get_error($feedback)));
+    } else {
+        redirect(sprintf('/DDWT21/week2/myaccount/?error_msg=%s',
+            get_error($feedback)));
+    }
+
+    /* Page info */
+    $page_title = 'Log in';
+    $breadcrumbs = get_breadcrumbs([
+        'DDWT21' => na('/DDWT21/', False),
+        'Week 2' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False)
+    ]);
+    $navigation = get_navigation([
+        'Home' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False),
+        'Add series' => na('/DDWT21/week2/add/', False),
+        'My Account' => na('/DDWT21/week2/myaccount/', False),
+        'Registration' => na('/DDWT21/week2/register/', False)
+    ]);
+
+    /* Page content */
+    $page_subtitle = 'Log in here';
+
+    /* Choose Template */
+    include use_template('login');
+}
+
+/* logout POST */
+elseif (new_route('/DDWT21/week2/logout/', 'get')) {
+    /* get user info */
+    $user = get_user_name($db, 1);
+
+    /* Page info */
+    $page_title = 'Log in';
+    $breadcrumbs = get_breadcrumbs([
+        'DDWT21' => na('/DDWT21/', False),
+        'Week 2' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False)
+    ]);
+    $navigation = get_navigation([
+        'Home' => na('/DDWT21/week2/', False),
+        'Overview' => na('/DDWT21/week2/overview', False),
+        'Add series' => na('/DDWT21/week2/add/', False),
+        'My Account' => na('/DDWT21/week2/myaccount/', False),
+        'Registration' => na('/DDWT21/week2/register/', False)
+    ]);
+
+    /* Page content */
+    $page_subtitle = 'Log in here';
+
+    /* Choose Template */
+    include use_template('login');
+}
+
 
 else {
     http_response_code(404);

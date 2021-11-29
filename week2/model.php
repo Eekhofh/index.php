@@ -419,11 +419,109 @@ function get_user_name($pdo, $id){
     $name = $pdo->prepare('SELECT firstname, lastname FROM users WHERE id = ?');
     $name->execute([$id]);
     $username = $name->fetch();
-    return $username['firstname'];
+    /*return $username['firstname'];*/
 }
 
 function count_users($pdo){
     $rows = $pdo->prepare('SELECT id FROM series');
     $rows->execute();
     return $rows->rowCount($rows);
+}
+
+function register_user($pdo, $form_data){
+    if (
+        empty($form_data['username']) or
+        empty($form_data['password']) or
+        empty($form_data['firstname']) or
+        empty($form_data['lastname'])
+    ){
+        return [
+            'type' => 'danger',
+            'message' => 'Please fill in all fields'
+        ];
+    } else {
+        try {
+            $exists = $pdo->prepare('SELECT * FROM users WHERE username = ?');
+            $exists->execute([$form_data['username']]);
+            $user_exists = $exists->fetch();
+        } catch (PDOException $e) {
+            return [
+                'type' => 'danger',
+                'message' => 'There was an error: %s', $e->getMessage()
+            ];
+        }
+        if (!empty($user_exists)){
+            return [
+                'type' => 'danger',
+                'message' => 'This username already exists'
+            ];
+        } else {
+            $password = password_hash($form_data['password'], PASSWORD_DEFAULT);
+            try {
+                $add = $pdo->prepare('INSERT INTO users(username, password, firstname, lastname) VALUES (?, ?, ?, ?)');
+                $add->execute([
+                    $form_data['username'],
+                    $password,
+                    $form_data['firstname'],
+                    $form_data['lastname']
+                ]);
+                $user_id = $pdo->lastInsertId();
+                session_start();
+                $_SESSION['user_id'] = $user_id;
+                return [
+                    'type' => 'success',
+                    'message' => 'Successfully registered!'
+                ];
+            } catch (PDOException $e){
+                return [
+                    'type' => 'danger',
+                    'message' => 'There was an error: %s', $e->getMessage()
+                ];
+            }
+        }
+
+    }
+}
+
+function login_user($pdo, $form_data){
+    if (
+        empty($form_data['username']) or
+        empty($form_data['password'])
+    ) {
+        return [
+            'type' => 'danger',
+            'message' => 'Please enter your username and password'
+        ];
+    } else {
+        try {
+            $stmt = $pdo->prepare('SELECT * FROM  users WHERE username = ?');
+            $stmt->execute([$form_data['username']]);
+            $user_info = $stmt->fetch();
+        } catch (PDOException $e) {
+            return [
+                'type' => 'danger',
+                'message' => 'An error occurred'
+            ];
+        }
+        if (empty($user_info)) {
+            return [
+                'type' => 'danger',
+                'message' => 'This username does not exist'
+            ];
+        } else {
+            if (!password_verify($form_data['password'], $user_info['password'])){
+                return [
+                    'type' => 'danger',
+                    'message' => 'Incorrect password'
+                ];
+            } else {
+                session_start();
+                $_SESSION['user_id'] = $user_info['id'];
+                return [
+                    'type' => 'success',
+                    'message' => 'Successfully logged in!'
+                ];
+            }
+        }
+    }
 }
