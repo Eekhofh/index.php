@@ -291,66 +291,67 @@ function add_series($pdo, $series_info){
  * @return array
  */
 function update_series($pdo, $series_info){
-    /* Check if all fields are set */
-    if (
-        empty($series_info['Name']) or
-        empty($series_info['Creator']) or
-        empty($series_info['Seasons']) or
-        empty($series_info['Abstract']) or
-        empty($series_info['series_id'])
-    ) {
-        return [
-            'type' => 'danger',
-            'message' => 'There was an error. Not all fields were filled in.'
-        ];
-    }
+    if (isset($_SESSION['user_id']) and $series_info['user'] == $_SESSION['user_id']) {
+        /* Check if all fields are set */
+        if (
+            empty($series_info['Name']) or
+            empty($series_info['Creator']) or
+            empty($series_info['Seasons']) or
+            empty($series_info['Abstract']) or
+            empty($series_info['series_id'])
+        ) {
+            return [
+                'type' => 'danger',
+                'message' => 'There was an error. Not all fields were filled in.'
+            ];
+        }
 
-    /* Check data type */
-    if (!is_numeric($series_info['Seasons'])) {
-        return [
-            'type' => 'danger',
-            'message' => 'There was an error. You should enter a number in the field Seasons.'
-        ];
-    }
+        /* Check data type */
+        if (!is_numeric($series_info['Seasons'])) {
+            return [
+                'type' => 'danger',
+                'message' => 'There was an error. You should enter a number in the field Seasons.'
+            ];
+        }
 
-    /* Get current series name */
-    $stmt = $pdo->prepare('SELECT * FROM series WHERE id = ?');
-    $stmt->execute([$series_info['series_id']]);
-    $series = $stmt->fetch();
-    $current_name = $series['name'];
+        /* Get current series name */
+        $stmt = $pdo->prepare('SELECT * FROM series WHERE id = ?');
+        $stmt->execute([$series_info['series_id']]);
+        $series = $stmt->fetch();
+        $current_name = $series['name'];
 
-    /* Check if series already exists */
-    $stmt = $pdo->prepare('SELECT * FROM series WHERE name = ?');
-    $stmt->execute([$series_info['Name']]);
-    $series = $stmt->fetch();
-    if ($series_info['Name'] == $series['name'] and $series['name'] != $current_name){
-        return [
-            'type' => 'danger',
-            'message' => sprintf("The name of the series cannot be changed. %s already exists.", $series_info['Name'])
-        ];
-    }
+        /* Check if series already exists */
+        $stmt = $pdo->prepare('SELECT * FROM series WHERE name = ?');
+        $stmt->execute([$series_info['Name']]);
+        $series = $stmt->fetch();
+        if ($series_info['Name'] == $series['name'] and $series['name'] != $current_name) {
+            return [
+                'type' => 'danger',
+                'message' => sprintf("The name of the series cannot be changed. %s already exists.", $series_info['Name'])
+            ];
+        }
 
-    /* Update Series */
-    $stmt = $pdo->prepare("UPDATE series SET name = ?, creator = ?, seasons = ?, abstract = ? WHERE id = ?");
-    $stmt->execute([
-        $series_info['Name'],
-        $series_info['Creator'],
-        $series_info['Seasons'],
-        $series_info['Abstract'],
-        $series_info['series_id']
-    ]);
-    $updated = $stmt->rowCount();
-    if ($updated ==  1) {
-        return [
-            'type' => 'success',
-            'message' => sprintf("Series '%s' was edited!", $series_info['Name'])
-        ];
-    }
-    else {
-        return [
-            'type' => 'warning',
-            'message' => 'The series was not edited. No changes were detected.'
-        ];
+        /* Update Series */
+        $stmt = $pdo->prepare("UPDATE series SET name = ?, creator = ?, seasons = ?, abstract = ? WHERE id = ?");
+        $stmt->execute([
+            $series_info['Name'],
+            $series_info['Creator'],
+            $series_info['Seasons'],
+            $series_info['Abstract'],
+            $series_info['series_id']
+        ]);
+        $updated = $stmt->rowCount();
+        if ($updated == 1) {
+            return [
+                'type' => 'success',
+                'message' => sprintf("Series '%s' was edited!", $series_info['Name'])
+            ];
+        } else {
+            return [
+                'type' => 'warning',
+                'message' => 'The series was not edited. No changes were detected.'
+            ];
+        }
     }
 }
 
@@ -364,21 +365,22 @@ function remove_series($pdo, $series_id){
     /* Get series info */
     $series_info = get_series_info($pdo, $series_id);
 
-    /* Delete Series */
-    $stmt = $pdo->prepare("DELETE FROM series WHERE id = ?");
-    $stmt->execute([$series_id]);
-    $deleted = $stmt->rowCount();
-    if ($deleted ==  1) {
-        return [
-            'type' => 'success',
-            'message' => sprintf("Series '%s' was removed!", $series_info['name'])
-        ];
-    }
-    else {
-        return [
-            'type' => 'warning',
-            'message' => 'An error occurred. The series was not removed.'
-        ];
+    if (isset($_SESSION['user_id']) and $series_info['user'] == $_SESSION['user_id']) {
+        /* Delete Series */
+        $stmt = $pdo->prepare("DELETE FROM series WHERE id = ?");
+        $stmt->execute([$series_id]);
+        $deleted = $stmt->rowCount();
+        if ($deleted == 1) {
+            return [
+                'type' => 'success',
+                'message' => sprintf("Series '%s' was removed!", $series_info['name'])
+            ];
+        } else {
+            return [
+                'type' => 'warning',
+                'message' => 'An error occurred. The series was not removed.'
+            ];
+        }
     }
 }
 
