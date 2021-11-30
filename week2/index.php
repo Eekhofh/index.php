@@ -78,6 +78,12 @@ elseif (new_route('/DDWT21/week2/series/', 'get')) {
     $series_id = $_GET['series_id'];
     $series_info = get_series_info($db, $series_id);
     $added_by = get_user_name($db, $series_info['user']);
+    session_start();
+    if (isset($_SESSION['user_id']) and $series_info['user'] == $_SESSION['user_id']) {
+        $display_buttons = True;
+    } else {
+        $display_buttons = False;
+    }
 
     /* Page info */
     $page_title = $series_info['name'];
@@ -227,13 +233,10 @@ elseif (new_route('/DDWT21/week2/edit/', 'post')) {
     /* Get Number of Series */
     $nbr_series = count_series($db);
 
-    /* Update series in database */
-    $feedback = update_series($db, $_POST);
-    $error_msg = get_error($feedback);
-
     /* Get series info from db */
     $series_id = $_POST['series_id'];
     $series_info = get_series_info($db, $series_id);
+    $added_by = get_user_name($db, $series_info['user']);
 
     /* Page info */
     $page_title = $series_info['name'];
@@ -256,6 +259,10 @@ elseif (new_route('/DDWT21/week2/edit/', 'post')) {
     $page_content = $series_info['abstract'];
     $nbr_seasons = $series_info['seasons'];
     $creators = $series_info['creator'];
+
+    /* Update series in database */
+    $feedback = update_series($db, $_POST);
+    $error_msg = get_error($feedback);
 
     /* Choose Template */
     include use_template('series');

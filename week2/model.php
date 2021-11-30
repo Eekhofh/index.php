@@ -331,14 +331,13 @@ function update_series($pdo, $series_info){
     }
 
     /* Update Series */
-    $stmt = $pdo->prepare("UPDATE series SET name = ?, creator = ?, seasons = ?, abstract = ?, user = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE series SET name = ?, creator = ?, seasons = ?, abstract = ? WHERE id = ?");
     $stmt->execute([
         $series_info['Name'],
         $series_info['Creator'],
         $series_info['Seasons'],
         $series_info['Abstract'],
-        $series_info['series_id'],
-        $_SESSION['user_id']
+        $series_info['series_id']
     ]);
     $updated = $stmt->rowCount();
     if ($updated ==  1) {
