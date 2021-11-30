@@ -261,8 +261,9 @@ elseif (new_route('/DDWT21/week2/edit/', 'post')) {
     $creators = $series_info['creator'];
 
     /* Update series in database */
-    $feedback = update_series($db, $_POST);
+    $feedback = update_series($db, $_POST, $series_info['user']);
     $error_msg = get_error($feedback);
+    $display_buttons = True;
 
     /* Choose Template */
     include use_template('series');

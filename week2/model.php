@@ -290,8 +290,8 @@ function add_series($pdo, $series_info){
  * @param array $series_info Associative array with series info
  * @return array
  */
-function update_series($pdo, $series_info){
-    if (isset($_SESSION['user_id']) and $series_info['user'] == $_SESSION['user_id']) {
+function update_series($pdo, $series_info, $user_id){
+    if (isset($_SESSION['user_id']) and $user_id == $_SESSION['user_id']) {
         /* Check if all fields are set */
         if (
             empty($series_info['Name']) or
@@ -324,7 +324,7 @@ function update_series($pdo, $series_info){
         $stmt = $pdo->prepare('SELECT * FROM series WHERE name = ?');
         $stmt->execute([$series_info['Name']]);
         $series = $stmt->fetch();
-        if ($series_info['Name'] == $series['name'] and $series['name'] != $current_name) {
+        if ($series and $series_info['Name'] == $series['name'] and $series['name'] != $current_name) {
             return [
                 'type' => 'danger',
                 'message' => sprintf("The name of the series cannot be changed. %s already exists.", $series_info['Name'])
