@@ -294,7 +294,7 @@ elseif (new_route('/DDWT21/week2/remove/', 'post')) {
     /* Page content */
     $page_subtitle = 'The overview of all series';
     $page_content = 'Here you find all series listed on Series Overview.';
-    $left_content = get_series_table(get_series($db));
+    $left_content = get_series_table(get_series($db), $db);
 
     /* Choose Template */
     include use_template('main');

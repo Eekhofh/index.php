@@ -43,7 +43,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-header">
-                            Welcome, <?= $user['firstname'] ?>
+                            Welcome, <?= $user ?>
                         </div>
                         <div class="card-body">
                             <p>You're logged in to Series Overview.</p>

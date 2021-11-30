@@ -138,7 +138,7 @@ function get_series_table($series, $pdo){
     <thead
     <tr>
         <th scope="col">Series</th>
-        <th scope="col"></th>
+        <th scope="col">Added by user</th>
         <th scope="col">Name</th>
     </tr>
     </thead>
@@ -261,12 +261,13 @@ function add_series($pdo, $series_info){
     }
 
     /* Add Series */
-    $stmt = $pdo->prepare("INSERT INTO series (name, creator, seasons, abstract) VALUES (?, ?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO series (name, creator, seasons, abstract, user) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([
         $series_info['Name'],
         $series_info['Creator'],
         $series_info['Seasons'],
-        $series_info['Abstract']
+        $series_info['Abstract'],
+        $_SESSION['user_id']
     ]);
     $inserted = $stmt->rowCount();
     if ($inserted ==  1) {
@@ -330,13 +331,14 @@ function update_series($pdo, $series_info){
     }
 
     /* Update Series */
-    $stmt = $pdo->prepare("UPDATE series SET name = ?, creator = ?, seasons = ?, abstract = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE series SET name = ?, creator = ?, seasons = ?, abstract = ?, user = ? WHERE id = ?");
     $stmt->execute([
         $series_info['Name'],
         $series_info['Creator'],
         $series_info['Seasons'],
         $series_info['Abstract'],
-        $series_info['series_id']
+        $series_info['series_id'],
+        $_SESSION['user_id']
     ]);
     $updated = $stmt->rowCount();
     if ($updated ==  1) {
@@ -419,11 +421,11 @@ function get_user_name($pdo, $id){
     $name = $pdo->prepare('SELECT firstname, lastname FROM users WHERE id = ?');
     $name->execute([$id]);
     $username = $name->fetch();
-    return $username;
+    return $username['firstname'];
 }
 
 function count_users($pdo){
-    $rows = $pdo->prepare('SELECT id FROM series');
+    $rows = $pdo->prepare('SELECT DISTINCT user FROM series');
     $rows->execute();
     return $rows->rowCount($rows);
 }
