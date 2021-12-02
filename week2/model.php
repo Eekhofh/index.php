@@ -139,7 +139,7 @@ function get_series_table($series, $pdo){
     <tr>
         <th scope="col">Series</th>
         <th scope="col">Added by user</th>
-        <th scope="col">Name</th>
+        <th scope="col"></th>
     </tr>
     </thead>
     <tbody>';
@@ -424,7 +424,7 @@ function get_user_name($pdo, $id){
     $name = $pdo->prepare('SELECT firstname, lastname FROM users WHERE id = ?');
     $name->execute([$id]);
     $username = $name->fetch();
-    return $username['firstname'];
+    return implode(" ", $username);
 }
 
 function count_users($pdo){
