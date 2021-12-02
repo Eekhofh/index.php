@@ -100,7 +100,7 @@ function get_breadcrumbs($breadcrumbs) {
  * @param array $navigation Array with as Key the page name and as Value the corresponding URL
  * @return string HTML code that represents the navigation
  */
-function get_navigation($navigation){
+function get_navigation($navigation_array, $active_id){
     $navigation_exp = '
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand">Series Overview</a>
@@ -109,13 +109,13 @@ function get_navigation($navigation){
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">';
-    foreach ($navigation as $name => $info) {
-        if ($info[1]){
+    foreach ($navigation_array as $name => $info) {
+        if ($name == $active_id){
             $navigation_exp .= '<li class="nav-item active">';
-            $navigation_exp .= '<a class="nav-link" href="'.$info[0].'">'.$name.'</a>';
+            $navigation_exp .= '<a class="nav-link" href="'.$info.'">'.$name.'</a>';
         }else{
             $navigation_exp .= '<li class="nav-item">';
-            $navigation_exp .= '<a class="nav-link" href="'.$info[0].'">'.$name.'</a>';
+            $navigation_exp .= '<a class="nav-link" href="'.$info.'">'.$name.'</a>';
         }
 
         $navigation_exp .= '</li>';
@@ -228,6 +228,7 @@ function get_error($feedback){
  * @return array Associative array with key type and message
  */
 function add_series($pdo, $series_info){
+    session_start();
     /* Check if all fields are set */
     if (
         empty($series_info['Name']) or
@@ -291,6 +292,7 @@ function add_series($pdo, $series_info){
  * @return array
  */
 function update_series($pdo, $series_info, $user_id){
+    session_start();
     if (isset($_SESSION['user_id']) and $user_id == $_SESSION['user_id']) {
         /* Check if all fields are set */
         if (
@@ -352,6 +354,11 @@ function update_series($pdo, $series_info, $user_id){
                 'message' => 'The series was not edited. No changes were detected.'
             ];
         }
+    } else {
+        return [
+            'type' => 'danger',
+            'message' => 'Something went wrong'
+        ];
     }
 }
 
