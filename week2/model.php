@@ -354,11 +354,6 @@ function update_series($pdo, $series_info, $user_id){
                 'message' => 'The series was not edited. No changes were detected.'
             ];
         }
-    } else {
-        return [
-            'type' => 'danger',
-            'message' => 'Something went wrong'
-        ];
     }
 }
 

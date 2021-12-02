@@ -251,6 +251,10 @@ elseif (new_route('/DDWT21/week2/myaccount/', 'get')) {
     $page_subtitle = 'Account';
     $page_content = 'Here you find information regarding your account.';
 
+    if(isset($_GET['error_msg'])){
+        $error_msg = get_error(json_decode($_GET['error_msg'], True));
+    }
+
     /* Choose Template */
     include use_template('account');
 }
@@ -269,6 +273,10 @@ elseif (new_route('/DDWT21/week2/register/', 'get')) {
     /* Page content */
     $page_subtitle = 'Here you can register an account';
 
+    if(isset($_GET['error_msg'])){
+        $error_msg = get_error(json_decode($_GET['error_msg'], True));
+    }
+
     /* Choose Template */
     include use_template('register');
 }
@@ -277,32 +285,12 @@ elseif (new_route('/DDWT21/week2/register/', 'get')) {
 elseif (new_route('/DDWT21/week2/register/', 'post')) {
     /* Register user */
     $feedback = register_user($db, $_POST);
-    $error_msg = get_error($feedback);
 
-    /*
     if ($feedback['type'] == 'danger') {
-        redirect(sprintf('/DDWT21/week2/register/?error_msg=%s',
-            json_encode($feedback)));
+        redirect(sprintf('/DDWT21/week2/register/?error_msg=%s', json_encode($feedback)));
     } else {
-        redirect(sprintf('/DDWT21/week2/myaccount/?error_msg=%s',
-            json_encode($feedback)));
+        redirect(sprintf('/DDWT21/week2/myaccount/?error_msg=%s', json_encode($feedback)));
     }
-    */
-
-    /* Page info */
-    $page_title = 'Registration';
-    $breadcrumbs = get_breadcrumbs([
-        'DDWT21' => na('/DDWT21/', False),
-        'Week 2' => na('/DDWT21/week2/', False),
-        'Overview' => na('/DDWT21/week2/overview', False)
-    ]);
-    $navigation = get_navigation($navigation_array, 'Register');
-
-    /* Page content */
-    $page_subtitle = 'Here you can register an account';
-
-    /* Choose Template */
-    include use_template('register');
 }
 
 /* login GET */
@@ -324,6 +312,10 @@ elseif (new_route('/DDWT21/week2/login/', 'get')) {
     /* Page content */
     $page_subtitle = 'Log in here';
 
+    if(isset($_GET['error_msg'])){
+        $error_msg = get_error(json_decode($_GET['error_msg'], True));
+    }
+
     /* Choose Template */
     include use_template('login');
 }
@@ -334,26 +326,10 @@ elseif (new_route('/DDWT21/week2/login/', 'post')) {
     $feedback = login_user($db, $_POST);
 
     if ($feedback['type'] == 'success') {
-        redirect('/DDWT21/week2/myaccount/');
+        redirect(sprintf('/DDWT21/week2/myaccount/?error_msg=%s', json_encode($feedback)));
     } else {
-        redirect(sprintf('/DDWT21/week2/login/?error_msg=%s',
-            json_encode($feedback)));
+        redirect(sprintf('/DDWT21/week2/login/?error_msg=%s', json_encode($feedback)));
     }
-
-    /* Page info */
-    $page_title = 'Log in';
-    $breadcrumbs = get_breadcrumbs([
-        'DDWT21' => na('/DDWT21/', False),
-        'Week 2' => na('/DDWT21/week2/', False),
-        'Overview' => na('/DDWT21/week2/overview', False)
-    ]);
-    $navigation = get_navigation($navigation_array, 'Login');
-
-    /* Page content */
-    $page_subtitle = 'Log in here';
-
-    /* Choose Template */
-    include use_template('login');
 }
 
 /* logout POST */
