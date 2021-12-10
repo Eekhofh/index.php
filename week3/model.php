@@ -72,10 +72,17 @@ function get_series_info($pdo, $series_id){
     $series_info_exp = Array();
 
     /* Create array with htmlspecialchars */
-    foreach ($series_info as $key => $value){
-        $series_info_exp[$key] = htmlspecialchars($value);
+    if (!empty($series_info)) {
+        foreach ($series_info as $key => $value) {
+            $series_info_exp[$key] = htmlspecialchars($value);
+        }
+        return $series_info_exp;
+    } else {
+        return [
+            'type' => 'danger',
+            'message' => 'this series does not exist'
+        ];
     }
-    return $series_info_exp;
 }
 
 /**
@@ -173,6 +180,12 @@ function update_series($pdo, $series_info){
     $stmt = $pdo->prepare('SELECT * FROM series WHERE id = ?');
     $stmt->execute([$series_info['series_id']]);
     $series = $stmt->fetch();
+    if (!$series){
+        return [
+            'type' => 'danger',
+            'message' => 'This series does not exist'
+        ];
+    }
     $current_name = $series['name'];
 
     /* Check if series already exists */
@@ -219,6 +232,9 @@ function update_series($pdo, $series_info){
 function remove_series($pdo, $series_id){
     /* Get series info */
     $series_info = get_series_info($pdo, $series_id);
+    if (isset($series_info['type']) && $series_info['type'] == 'danger'){
+        return $series_info;
+    }
 
     /* Delete Series */
     $stmt = $pdo->prepare("DELETE FROM series WHERE id = ?");
@@ -257,4 +273,29 @@ function count_series($pdo){
 function redirect($location){
     header(sprintf('Location: %s', $location));
     die();
+}
+
+function http_content_type($content_type){
+    header(sprintf('Content-Type: %s', $content_type));
+}
+
+function set_cred($username, $password){
+    return [
+        'username' => $username,
+        'password' => $password
+    ];
+}
+
+function check_cred($cred){
+    if (!isset($_SERVER['PHP_AUTH_USER'])){
+        return False;
+    } else {
+        if ($_SERVER['PHP_AUTH_USER'] != $cred['username']){
+            return False;
+        } elseif ($_SERVER['PHP_AUTH_PW'] != $cred['password']){
+            return False;
+        } else {
+            return True;
+        }
+    }
 }
